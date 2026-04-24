@@ -15,7 +15,10 @@ def load_tags(vault_name: str, base_dir: str = None) -> dict:
     if not path.exists():
         return {}
     with open(path) as f:
-        return json.load(f)
+        try:
+            return json.load(f)
+        except json.JSONDecodeError as e:
+            raise ValueError(f"Corrupted tags file for vault '{vault_name}': {e}") from e
 
 
 def save_tags(vault_name: str, tags: dict, base_dir: str = None) -> None:
