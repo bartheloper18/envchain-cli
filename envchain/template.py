@@ -36,6 +36,23 @@ def find_placeholders(template: str) -> list[str]:
     return sorted(found)
 
 
+def find_missing_variables(template: str, variables: Dict[str, str]) -> list[str]:
+    """Return a sorted list of placeholder names that are not present in variables.
+
+    Useful for validating that all required variables are available before
+    performing a strict render.
+
+    Args:
+        template: String containing placeholders.
+        variables: Mapping of variable names to values.
+
+    Returns:
+        Sorted list of placeholder names missing from variables.
+    """
+    placeholders = find_placeholders(template)
+    return sorted(name for name in placeholders if name not in variables)
+
+
 def render_file(src_path: str, dst_path: str, variables: Dict[str, str], strict: bool = False) -> None:
     """Read a template file, render it, and write to dst_path."""
     with open(src_path, "r") as f:
